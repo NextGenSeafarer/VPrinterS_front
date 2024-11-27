@@ -1,0 +1,85 @@
+
+html {
+    background-image: url('src/static/bg1.jpg');
+    background-size: cover;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    @apply scrollbar-hide;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Убираем стрелки в Chrome, Safari, Edge и Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Убираем стрелки в Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Основные стили для input */
+input {
+    background-color: #1A3B4A; /* Цвет поверхности */
+    color: #D1E8E2; /* Основной цвет текста */
+    border: 1px solid #3B5360; /* Светлый оттенок для границ */
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    outline: none;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* При фокусе */
+input:focus {
+    background-color: #102A3D; /* Затемнённый фон при фокусе */
+    border-color: #B87333; /* Медный акцент для границы */
+    box-shadow: 0 0 0 2px rgba(184, 115, 51, 0.4); /* Медный оттенок для внешнего свечения */
+}
+
+/* При наведении */
+input:hover {
+    background-color: #223E4D; /* Чуть светлее при наведении */
+    border-color: #8C4A2F; /* Тёмный медный для границы */
+}
+
+/* Для неактивного состояния */
+input:disabled {
+    background-color: #263E4D; /* Затемнённый фон для неактивного состояния */
+    color: #A5B9B7; /* Блеклый текст для неактивного состояния */
+    border-color: #3B5360; /* Сохранение нейтральной границы */
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #d9534f;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    animation: slideDownFadeIn 0.5s ease forwards;
+    opacity: 0; /* Начальное состояние для анимации */
+}
+
+/* Анимация появления сообщения */
+@keyframes slideDownFadeIn {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
