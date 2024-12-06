@@ -1,20 +1,22 @@
 import {useState} from "react";
 import {useFormContext} from "../../services/FormContext/FormProvider.jsx";
 
-const RadioGroupInline = ({checked, text}) => {
+const RadioGroupInline = ({checked, text, onOilChange, onTypeSpecificationChange}) => {
 
-    const {onChange, isEditing} = useFormContext()
+    const {isEditing} = useFormContext()
     const [selected, setSelected] = useState(checked);
     const [otherText, setOtherText] = useState(text);
 
-    const handleOptionChange = (option) => {
-        setSelected(option);
+    const handleOptionChange = (e) => {
+        setSelected(e.target.value);
+        onOilChange(e.target.value);
     };
 
     const handleOtherTextChange = (e) => {
         const value = e.target.value;
         if (value.length <= 200) {
             setOtherText(value);
+            onTypeSpecificationChange(value);
         }
     };
 
@@ -35,7 +37,7 @@ const RadioGroupInline = ({checked, text}) => {
                             name="options"
                             value={item}
                             checked={selected === item}
-                            onChange={() => handleOptionChange(item)}
+                            onChange={handleOptionChange}
                             className="form-radio h-5 w-5"
                         />
                         <span className="capitalize">{item}</span>
@@ -46,6 +48,7 @@ const RadioGroupInline = ({checked, text}) => {
             {selected === "OTHER" && (
                 <div className="mt-4">
                     <input
+                        disabled={!isEditing}
                         type="text"
                         value={otherText}
                         onChange={handleOtherTextChange}

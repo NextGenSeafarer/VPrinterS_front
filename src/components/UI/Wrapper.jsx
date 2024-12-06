@@ -3,7 +3,6 @@ export const Wrapper = ({children}) => {
         <>
 
             <div className={'scrollbar-hide'}>
-
                 {children}
             </div>
         </>

@@ -11,6 +11,7 @@ export const AuthProvider = ({children}) => {
             const response = await $api.post("/auth/login", {email, password});
             localStorage.setItem("accessToken", response.data.access_token);
             setIsAuthenticated(true);
+            localStorage.setItem("userEmail", email);
         } catch (error) {
             if (error.response) {
                 throw new Error(error.response.data.message || "Not correct login/password");
@@ -52,6 +53,7 @@ export const AuthProvider = ({children}) => {
     const markAsUnauthenticated = useCallback(() => {
         setIsAuthenticated(false);
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("userEmail");
         window.location.href = "/login";
     }, []);
 

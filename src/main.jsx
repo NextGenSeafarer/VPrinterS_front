@@ -6,6 +6,8 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {MainPage} from "./routes/MainPage.jsx";
 import LoginPage from "./routes/LoginPage.jsx";
 import {EquipmentPage} from "./routes/EquipmentPage.jsx";
+import PersonalPage from "./routes/PersonalPage.jsx";
+
 
 const router = createBrowserRouter([
         {
@@ -13,6 +15,7 @@ const router = createBrowserRouter([
                 {index: true, element: <MainPage/>},
                 {path: "login", element: <LoginPage/>},
                 {path: "equipment", element: <EquipmentPage/>},
+                {path: "personal", element: <PersonalPage/>},
             ]
         }
     ]
@@ -20,6 +23,7 @@ const router = createBrowserRouter([
 
 
 createRoot(document.getElementById('root')).render(
+
     <AuthProvider>
         <RouterProvider router={router}/>
     </AuthProvider>

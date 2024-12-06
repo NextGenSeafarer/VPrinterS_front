@@ -11,8 +11,9 @@ const EquipmentTable = ({equipmentData}) => {
     const handleMainDateChange = (e) => {
         setMainDate(e.target.value);
     }
-
-
+    const handleEquipmentChange = (e) => {
+        console.log(e.target.value);
+    }
 
 
     return (
@@ -26,12 +27,8 @@ const EquipmentTable = ({equipmentData}) => {
                        onChange={handleMainDateChange}
                 />
             </div>
-            {/* Обертка для фона таблицы */}
             <div className="bg-background rounded-md p-4 border border-borderDark">
-                {/* Заголовки столбцов */}
-                <div
-
-                    className="grid grid-cols-[240px_repeat(6,_1fr)_80px] gap-2 text-primaryText mb-2 border-b border-borderLight pb-2 text-center">
+                <div className="grid grid-cols-[240px_repeat(6,_1fr)_80px] gap-2 text-primaryText mb-2 border-b border-borderLight pb-2 text-center">
                     <div className="font-semibold">Name</div>
                     <div className="font-semibold">VPS ID</div>
                     <div className="font-semibold">Oil Quantity
@@ -48,13 +45,12 @@ const EquipmentTable = ({equipmentData}) => {
                     </div>
 
                     <div className="font-semibold">...</div>
-                    <div className="font-semibold">Send to printer?</div>
+                    <div className="font-semibold">Print</div>
                 </div>
 
-                {/* Данные в виде строк */}
                 <div className="space-y-2">
                     {equipmentData.map((equipment) => (
-                        <Equipment key={equipment.id} equipmentData={equipment}></Equipment>
+                        <Equipment key={equipment.id} equipmentData={equipment} onEquipmentEdit={handleEquipmentChange}></Equipment>
                     ))}
                 </div>
             </div>

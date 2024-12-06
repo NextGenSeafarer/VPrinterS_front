@@ -15,8 +15,8 @@ html {
 
 /* For IE, Edge and Firefox */
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 /* Убираем стрелки в Chrome, Safari, Edge и Opera */
@@ -63,8 +63,9 @@ input:disabled {
     cursor: not-allowed;
 }
 
-.error-message {
-    color: #d9534f;
+
+
+.message {
     padding: 5px;
     border-radius: 5px;
     text-align: center;
@@ -81,5 +82,40 @@ input:disabled {
     100% {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+/* LOADER */
+.loader {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 2s;
+    inset: 0;
+}
+
+.loader__body {
+    border-radius: 45px 22px;
+    width: 105px;
+    height: 105px;
+    animation: rotate 3s alternate-reverse infinite cubic-bezier(0.71, 0.09, 0.33, 1.04);
+    position: relative;
+}
+
+@keyframes rotate {
+    0% {
+        border: 8px solid #102A3D;
+        border-radius: 300px;
+    }
+    50% {
+        border: 8px solid #A5B9B7;
+        rotate: 480deg;
+        box-shadow: 2px 6px 2px 2px #FF9F43;
+    }
+    100% {
+        border: 15px solid #FF9F43;
+        transform: rotate(180deg);
+        scale: 1.2;
     }
 }

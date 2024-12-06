@@ -1,33 +1,30 @@
 import DropdownMenu from "./UI/DropDownMenu.jsx";
 import {Toggle} from "./UI/Toggle.jsx";
 import {useState} from "react";
-import {EquipmentModal} from "./EquipmentModal.jsx";
 import {AddUpdateEquipmentForm} from "./AddUpdateEquipmentForm.jsx";
 
 export const Equipment = ({equipmentData, onEquipmentEdit}) => {
 
-    const [equipment, setEquipment] = useState({
-        name: equipmentData.name,
-        vps_equipment_id: equipmentData.vps_equipment_id,
-        unit_service_time: equipmentData.unit_service_time,
-        oil_service_time: equipmentData.oil_service_time,
-        sampling_date: equipmentData.sampling_date,
-        oil_quantity_in_system: equipmentData.oil_quantity_in_system,
-        daily_top_up: equipmentData.daily_top_up,
-        fuel_in_use: equipmentData.fuel_in_use,
-        new_equipment: equipmentData.new_equipment,
-        equipment_type: equipmentData.equipment_type,
-        equipment_type_short: equipmentData.equipment_type_short,
-        manufacturer: equipmentData.manufacturer,
-        oil_brand: equipmentData.oil_brand,
-        oil_grade: equipmentData.oil_grade,
-        oil_type: equipmentData.oil_type,
-        type_specification: equipmentData.type_specification,
-        id: equipmentData.id,
-        active: equipmentData.active,
-        changed_at: equipmentData.changed_at,
-        created_at: equipmentData.created_at,
-    });
+    const [equipment, setEquipment] = useState(equipmentData);
+
+    const inputFields = [
+        {
+            name: "unit_service_time",
+            type: "number",
+            value: equipment.unit_service_time,
+        },
+        {
+            name: "oil_service_time",
+            type: "number",
+            value: equipment.oil_service_time,
+        },
+        {
+            name: "sampling_date",
+            type: "date",
+            value: equipment.sampling_date,
+        },
+    ];
+
 
     const handeChange = (e) => {
         const {name, value} = e.target;
@@ -36,10 +33,11 @@ export const Equipment = ({equipmentData, onEquipmentEdit}) => {
             setEquipment((prevState) => ({
                 ...prevState, [name]: value
             }));
+            onEquipmentEdit(e)
         }
     };
 
-
+     
     const handleToggleChange = () => {
         setEquipment((prevState) => ({
             ...prevState, active: !prevState.active
@@ -118,41 +116,19 @@ export const Equipment = ({equipmentData, onEquipmentEdit}) => {
                 {/* Oil Quantity */}
                 <div className="truncate">{equipment.oil_quantity_in_system}</div>
 
-                {/* Unit Service Time */}
-                <div>
-                    <input
-                        disabled={!equipment.active}
-                        name='unit_service_time'
-                        type="number"
-                        value={equipment.unit_service_time}
-                        onChange={handeChange}
-                        className="w-full bg-transparent text-primaryText p-1 border border-borderLight rounded"
-                    />
-                </div>
+                {inputFields.map(({ name, type, value }) => (
+                    <div key={name}>
+                        <input
+                            disabled={!equipment.active}
+                            name={name}
+                            type={type}
+                            value={value}
+                            onChange={handeChange}
+                            className="w-full bg-transparent text-primaryText p-1 border border-borderLight rounded appearance-none"
+                        />
+                    </div>
+                ))}
 
-                {/* Oil Service Time */}
-                <div>
-                    <input
-                        disabled={!equipment.active}
-                        name='oil_service_time'
-                        type="number"
-                        value={equipment.oil_service_time}
-                        onChange={handeChange}
-                        className="w-full bg-transparent text-primaryText p-1 border border-borderLight rounded"
-                    />
-                </div>
-
-                {/* Sampling Date - стилизован аналогично другим input */}
-                <div>
-                    <input
-                        disabled={!equipment.active}
-                        name='sampling_date'
-                        type="date"
-                        value={equipment.sampling_date}
-                        onChange={handeChange}
-                        className="w-full bg-transparent text-primaryText p-1 border border-borderLight rounded appearance-none"
-                    />
-                </div>
                 <div className="flex justify-center space-x-2">
                     <DropdownMenu onOpenModal={handleOpenModal}/>
                 </div>

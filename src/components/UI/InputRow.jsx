@@ -1,8 +1,8 @@
 import {useFormContext} from "../../services/FormContext/FormProvider.jsx";
 
 const InputRow = ({name, heading, value, type, units, children}) => {
-    const {isEditing, onChange} = useFormContext();
 
+    const {isEditing, onChange} = useFormContext();
     return (
         <>
 
@@ -16,7 +16,8 @@ const InputRow = ({name, heading, value, type, units, children}) => {
                             value={value}
                             name={name}
                             type={type}
-                            onChange={onChange}/>)
+                            onChange={onChange}
+                        />)
                     :
                     (
                         <span className="text-secondaryText p-1">{value}</span>

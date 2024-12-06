@@ -33,8 +33,9 @@ const DropdownMenu = ({onOpenModal}) => {
                         <li
                             className="px-4 py-2 hover:bg-secondaryAccent cursor-pointer"
                             onClick={() => alert('Edit option selected')}
+                            /*{TODO: think about how to handle groups}*/
                         >
-                            Edit
+                            Groups
                         </li>
                         <li
                             className="px-4 py-2 hover:bg-secondaryAccent cursor-pointer rounded-b-xl"
