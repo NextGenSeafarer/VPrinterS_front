@@ -39,7 +39,7 @@ const getNameAndLength = (name) => {
     }
 }
 
-const checkEquipmentInput = (name,inputValue) => {
+const checkEquipmentInput = (name, inputValue) => {
     const {type, maxValueLength} = getNameAndLength(name)
     return maxValueLength;
     // if (typeof inputValue !== type) {

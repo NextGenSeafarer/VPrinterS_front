@@ -1,27 +1,19 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import $api from "../http/axiosConfig.js";
 import {Loader} from "../components/UI/Loader/Loader.jsx";
 import {FaQuestionCircle} from "react-icons/fa";
 import CopyableField from "../components/UI/CopyableField.jsx";
+import {AuthContext} from "../services/AuthContext.jsx";
+import {API_PERSONAL_URL} from "../http/APIendpoints.js";
+
 
 const PersonalPage = () => {
 
-    const fields = [{
-        name: 'ship_name',
-        type: 'text',
-        label: 'Ship Name',
-        length: 45,
-        placeholder: 'LNG/C Methane Pioneer'
-    }, {name: 'imo', type: 'number', label: 'IMO', length: 7, placeholder: '5233573'}, {
-        name: 'customer_name',
-        type: 'text',
-        label: 'Customer name',
-        length: 45,
-        placeholder: 'Light blue dragon LTD'
-    },
-        {name: 'type', type: 'text', label: 'Ship type', length: 35, placeholder: 'LNG/C'},];
-
-    const api = "/api/personal";
+    const fields = [
+        {name: 'ship_name', type: 'text', label: 'Vessel Name', length: 45, placeholder: 'LNG/C Methane Pioneer'},
+        {name: 'imo', type: 'number', label: 'IMO', length: 7, placeholder: '5233573'},
+        {name: 'customer_name', type: 'text', label: 'Customer name', length: 45, placeholder: 'Light blue dragon LTD'},
+        {name: 'type', type: 'text', label: 'Vessel type', length: 35, placeholder: 'LNG/C'},];
     const initialState = {
         ship_name: '', imo: '', customer_name: '', type: '', copy_code: ''
     }
@@ -30,21 +22,34 @@ const PersonalPage = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [copyCodeInfoVisible, setCopyCodeInfoVisible] = useState(false);
-    const [isNewUser, setIsNewUser] = useState(false);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
+    const {isNewUser, setIsNewUser} = useContext(AuthContext);
 
 
     const getShipDetails = async () => {
         try {
             setIsLoading(true);
-            const response = await $api.get(api)
-            setShipDetails(response.data)
+            const response = await $api.get(API_PERSONAL_URL)
+            setShipDetails(response.data);
         } catch (error) {
             if (error.response.status === 404) {
                 setErrorMessage(`Ship's details not found, fill up first ❌`);
-                setIsNewUser(true);
             }
         } finally {
             setIsLoading(false)
+        }
+    }
+
+
+    const checkShipDetails = () => {
+        if (shipDetails.imo.length === 7
+            && shipDetails.ship_name.length >= 2
+            && shipDetails.customer_name.length >= 2
+            && shipDetails.type.length >= 2
+        ) {
+            setSubmitDisabled(false);
+        } else {
+            setSubmitDisabled(true);
         }
     }
 
@@ -54,12 +59,12 @@ const PersonalPage = () => {
         setIsLoading(true);
         try {
             if (isNewUser) {
-                await $api.post(api, shipDetails)
+                await $api.post(API_PERSONAL_URL, shipDetails)
                 setSuccessMessage('Ships details added successfully ✅')
                 setIsNewUser(false)
                 await getShipDetails()
             } else {
-                await $api.patch(api, shipDetails)
+                await $api.patch(API_PERSONAL_URL, shipDetails)
                 setSuccessMessage('Ships details updated successfully ✅')
                 setIsNewUser(false)
             }
@@ -75,7 +80,7 @@ const PersonalPage = () => {
         setErrorMessage('')
         setIsLoading(true);
         try {
-            await $api.delete(api)
+            await $api.delete(API_PERSONAL_URL)
             setSuccessMessage('Ships details DELETED successfully 🗑️')
             setShipDetails(initialState)
             setIsNewUser(true)
@@ -100,21 +105,31 @@ const PersonalPage = () => {
         }
     }
 
+
     useEffect(() => {
         getShipDetails()
     }, [])
+
+    useEffect(() => {
+        checkShipDetails()
+    }, [shipDetails])
 
 
     return (
 
         <div className="max-w-lg mx-auto p-6 bg-surfaceLight rounded-lg shadow-lg space-y-5 w-[750px] relative">
+            <div className={'flex items-center justify-start gap-3 align-middle border-2 p-3 rounded-2xl border-error'}>
+                <button className={'buttonPrimary bg-error max-w-fit'} onClick={()=>alert('Confirming email')}>Confirm email
+                </button>
+                <div className={'text-primaryText text-md'}>{localStorage.getItem('userEmail')}</div>
+            </div>
             {isLoading && <Loader className={'absolute z-50'}></Loader>}
-            <h2 className="text-2xl font-bold text-primaryText mb-4">Ship Information</h2>
+            <h2 className="text-2xl font-bold text-primaryText mb-4">Vessel information</h2>
             <span className={'text-info font-bold'}>Data below will be proceeding for labels generation, fill up exactly as you wish to see on the label</span>
             {errorMessage && <p className={'message text-error'}>{errorMessage}</p>}
             {successMessage && <p className={'message text-success'}>{successMessage}</p>}
             {fields.map((item) => (<label className="flex items-center justify-between text-primaryText relative"
-                                          key={item}>{item.label}
+                                          key={item.name}>{item.label}
                 <input
                     className={`w-[330px] ${
                         item.name === 'imo'
@@ -126,7 +141,8 @@ const PersonalPage = () => {
                                 : 'border-success'
                     }`}
                     type={item.type} name={item.name}
-                    placeholder={item.placeholder} value={shipDetails[item.name]} onChange={handleInputChange}/>
+                    placeholder={item.placeholder} value={shipDetails[item.name]} onChange={handleInputChange}
+                />
             </label>))}
 
             {shipDetails.copy_code &&
@@ -143,13 +159,15 @@ const PersonalPage = () => {
                         This is YOUR personal SECRET CODE. By applying some one else SECRET CODE at page EQUIPMENT -
                         you will copy all equipment from vessel you got the code. It will make initial filling of data
                         easy for you
-
                     </div>}
                 </div>
             }
-            <div className={'flex flex-row justify-between items-center relative space-y-5'}>
-                <button onClick={handleSave}>Save</button>
-                <button onClick={handleDelete}>Delete data</button>
+            <div className={'flex flex-row justify-between items-center relative space-x-10'}>
+                <button disabled={submitDisabled} className={'buttonPrimary bg-success mt-5'} onClick={handleSave}>Save
+                </button>
+                <button disabled={isNewUser} className={'buttonPrimary bg-error mt-5'} onClick={handleDelete}>Reset
+                    data
+                </button>
             </div>
 
         </div>);

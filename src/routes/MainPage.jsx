@@ -50,11 +50,6 @@ export const MainPage = () => {
                         </div>
                     </div>
 
-                    {/* Call to Action */}
-                    <button
-                        className="bg-highlightAccent text-black px-8 py-3 rounded-md mt-6 hover:bg-hover font-semibold">
-                        Start Printing Now
-                    </button>
                 </div>
             </div>
 

@@ -1,10 +1,11 @@
 import axios from "axios";
+import {API_BASE_URL, API_REFRESH_TOKEN_URL} from "./APIendpoints.js";
 
-export const API_URL = 'http://localhost:8080'
+
 
 const $api = axios.create({
     withCredentials: true,
-    baseURL: API_URL,
+    baseURL: API_BASE_URL,
 })
 
 $api.interceptors.request.use(
@@ -48,7 +49,7 @@ $api.interceptors.response.use(
             if (!isRefreshing) {
                 isRefreshing = true;
                 try {
-                    const {data} = await $api.post("/auth/refresh", {withCredentials: true});
+                    const {data} = await $api.post(API_REFRESH_TOKEN_URL, {withCredentials: true});
                     localStorage.setItem('accessToken', data.access_token);
                     const {accessToken} = data;
                     $api.defaults.headers.Authorization = `Bearer ${accessToken}`;
