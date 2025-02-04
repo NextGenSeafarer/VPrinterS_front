@@ -5,13 +5,15 @@ import CheckboxGroup from "./UI/CheckboxGroup.jsx";
 import {Toggle} from "./UI/Toggle.jsx";
 import checkEquipmentInput from "../services/Validator.js";
 import {FormProvider} from "../services/FormContext/FormProvider.jsx";
-import $api from "../http/axiosConfig.js";
 
 import {MdOutlineExpandMore} from "react-icons/md";
 import {MdOutlineExpandLess} from "react-icons/md";
 import {SaveCancelButtonsBlock} from "./UI/ButtonsBlocks/SaveCancelButtonsBlock.jsx";
 import {EditDeleteButtonsBlock} from "./UI/ButtonsBlocks/EditDeleteButtonsBlock.jsx";
-import {API_EQUIPMENT_URL} from "../http/APIendpoints.js";
+import {useFetching} from "./Hooks/useFetching.js";
+import EquipmentAPI from "../http/API/EquipmentAPI.js";
+import {Loader} from "./UI/Loader/Loader.jsx";
+import {InfoModal} from "./UI/ButtonsBlocks/InfoModal.jsx";
 
 const mainFields = [
     {name: "name", type: "text", heading: "Equipment name"},
@@ -19,7 +21,7 @@ const mainFields = [
     {name: "unit_service_time", type: "number", heading: "Unit service time", units: "hours"},
     {name: "oil_service_time", type: "number", heading: "Oil service time", units: "hours"},
     {name: "sampling_date", type: "date", heading: "Last sampling date"},
-    {name: "oil_quantity_in_system", type: "number", heading: "Oil quantity in system", units: "hours"},
+    {name: "oil_quantity_in_system", type: "number", heading: "Oil quantity in system", units: "liters"},
     {name: "daily_top_up", type: "number", heading: "Daily top up", units: "liters"},
     {name: "fuel_in_use", type: "text", heading: "Fuel in use", units: "N/A or fuel type"},
 ];
@@ -40,7 +42,7 @@ const additionalDataFields = [
         name: "manufacturer",
         type: "text",
         heading: "Manufacturer/Model",
-        units: "i.e. Wartsila 9L50DF",
+        units: "i.e. Wartsila / 9L50DF",
     },
     {
         name: "oil_brand",
@@ -57,20 +59,29 @@ const additionalDataFields = [
 ];
 
 
-export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalOpen, onModalClose}) => {
+export const UpdateEquipmentForm = ({onDropDownClose, equipmentData, isEditFormOpen, onModalClose, onChange}) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editableData, setEditableData] = useState({...equipmentData});
     const [originalData, setOriginalData] = useState({...equipmentData});
-    const [equipmentServerError, setEquipmentServerError] = useState('');
     const [showAdditionalData, setShowAdditionalData] = useState(false);
+    const [updateEquipment, isLoading, error] = useFetching(async () => {
+        if (isDataChanged(editableData, originalData)) {
+            const res = await EquipmentAPI.updateEquipment(editableData);
+            if (res.status === 200) {
+                setOriginalData({...editableData});
+                onChange(editableData);
+            }
+        }
+        setIsEditing(false);
+    });
 
     useEffect(() => {
         setEditableData({...equipmentData});
         setOriginalData({...equipmentData});
     }, [equipmentData]);
 
-    if (!isModalOpen) {
+    if (!isEditFormOpen) {
         return null;
     }
 
@@ -90,24 +101,6 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
         return JSON.stringify(newData) !== JSON.stringify(oldData);
     }
 
-    const handleUpdate = async () => {
-
-        if (isDataChanged(editableData, originalData)) {
-            try {
-                const updateEquipment = await $api.patch(API_EQUIPMENT_URL, editableData)
-                setOriginalData({...editableData});
-                setIsEditing(false);
-            } catch (error) {
-                setEquipmentServerError(error.response.data.message);
-                // handleErrors(error.response.data.message);
-                console.log(error.response.data.message);
-            } finally {
-                setIsEditing(false);
-            }
-        }
-        setIsEditing(false);
-    };
-
     const handleInputChange = (e) => {
         const {name, value} = e.target;
         const maxLength = checkEquipmentInput(name, value);
@@ -115,7 +108,7 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
             return;
         }
         setEditableData((prevEquipment) => ({
-            ...prevEquipment, [name]: value,
+        ...prevEquipment, [name]: value,
         }));
     };
 
@@ -124,6 +117,7 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
         setEditableData((prevEquipment) => ({
             ...prevEquipment, new_equipment: !prevEquipment.new_equipment,
         }));
+        setIsEditing(true);
     }
 
     const handleOilTypeChange = (type) => {
@@ -153,12 +147,12 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
                      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-start"
                      onClick={handleOverlayClick}
                 >
-
+                    {isLoading && <Loader className={'absolute inset-0 z-[100]'}/>}
+                    {error && <InfoModal header={'Something went wrong'} body={error}></InfoModal>}
                     <div
                         onClick={(e) => e.stopPropagation()}
                         className="bg-surfaceLight p-6 rounded-lg shadow-lg w-[650px] h-[80%] overflow-y-auto relative scrollbar-hide
                     shadow-surfaceLight">
-                        {/*<div className={'absolute top-0 right-0'}>{equipmentServerError}</div>*/}
                         <button className={"absolute top-0 right-0 p-2"} onClick={handleClose}>
                             <IoIosClose size={30} color={"#FF9F43"}/>
                         </button>
@@ -168,13 +162,13 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
                         {/* Список данных */}
                         <div className="overflow-y-auto max-h-fit">
                             {mainFields.map(({name, type, heading, units}) => (
-                                <InputRow
-                                    key={name}
-                                    name={name}
-                                    type={type}
-                                    value={editableData[name]}
-                                    heading={heading}
-                                    units={units}
+                                <InputRow className={editableData[name] === '' ? 'bg-error rounded-md ' : ''}
+                                          key={name}
+                                          name={name}
+                                          type={type}
+                                          value={editableData[name]}
+                                          heading={heading}
+                                          units={units}
                                 />))}
 
                             <InputRow
@@ -197,13 +191,13 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
                             <fieldset hidden={!showAdditionalData}>
 
                                 {additionalDataFields.map(({name, type, heading, units}) => (
-                                    <InputRow
-                                        key={name}
-                                        name={name}
-                                        type={type}
-                                        value={editableData[name]}
-                                        heading={heading}
-                                        units={units}
+                                    <InputRow className={editableData[name] === '' ? 'bg-error rounded-md ' : ''}
+                                              key={name}
+                                              name={name}
+                                              type={type}
+                                              value={editableData[name]}
+                                              heading={heading}
+                                              units={units}
                                     />))}
 
                                 <CheckboxGroup checked={editableData.oil_type}
@@ -217,7 +211,7 @@ export const AddUpdateEquipmentForm = ({onDropDownClose, equipmentData, isModalO
                         </div>
                         <div className="mt-6 flex justify-end space-x-10 relative">
                             {isEditing ? <SaveCancelButtonsBlock handleCancel={handleCancel}
-                                                                 handleSave={handleUpdate}></SaveCancelButtonsBlock> :
+                                                                 handleSave={updateEquipment}></SaveCancelButtonsBlock> :
                                 <EditDeleteButtonsBlock
                                     handleDelete={() => console.log('deleting ' + editableData.name)}
                                     setIsEditing={setIsEditing}></EditDeleteButtonsBlock>}

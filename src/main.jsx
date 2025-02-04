@@ -8,6 +8,7 @@ import {EquipmentPage} from "./routes/EquipmentPage.jsx";
 import PersonalPage from "./routes/PersonalPage.jsx";
 import {ProtectedRoute} from "./routes/ProtectedRoute.jsx";
 import {RegistrationPage} from "./routes/RegistrationPage.jsx";
+import {GeneratedPdfsPage} from "./routes/GeneratedPdfsPage.jsx";
 
 
 const router = createBrowserRouter([
@@ -23,7 +24,8 @@ const router = createBrowserRouter([
                 element: <ProtectedRoute />,
                 children: [
                     {path: "equipment", element: <EquipmentPage />},
-                    {path: "personal", element: <PersonalPage />}
+                    {path: "personal", element: <PersonalPage />},
+                    {path: "generated_pdfs", element: <GeneratedPdfsPage />}
                 ]
             }
         ]

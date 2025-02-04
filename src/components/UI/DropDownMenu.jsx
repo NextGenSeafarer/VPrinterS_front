@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 
-const DropdownMenu = ({onOpenModal}) => {
+const DropdownMenu = ({onOpenModal, onDelete}) => {
 
 
     const [isDropDownListOpen, setDropDownListOpen] = useState(false);
@@ -39,7 +39,7 @@ const DropdownMenu = ({onOpenModal}) => {
                         </li>
                         <li
                             className="px-4 py-2 hover:bg-secondaryAccent cursor-pointer rounded-b-xl"
-                            onClick={() => alert('Delete option selected')}
+                            onClick={onDelete}
                         >
                             Delete
                         </li>

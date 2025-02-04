@@ -112,8 +112,7 @@ export const RegistrationPage = () => {
                                 id="email"
                                 value={email}
                                 onChange={handleEmailChange}
-                                className={`w-full p-2 rounded border ${
-                                    emailError ? 'border-red-500' : 'border-borderLight'
+                                className={`w-full p-2 rounded border ${emailError ? 'border-red-500' : 'border-borderLight'
                                 } bg-background text-primaryText`}
                                 placeholder="you@example.com"
                                 required

@@ -1,3 +1,4 @@
+import {AddEquipmentForm} from "../components/AddEquipmentForm.jsx";
 
 
 export const MainPage = () => {
@@ -49,7 +50,6 @@ export const MainPage = () => {
                             </p>
                         </div>
                     </div>
-
                 </div>
             </div>
 

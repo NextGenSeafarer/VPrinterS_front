@@ -94,7 +94,7 @@ const LoginPage = () => {
 
                 {/* Ссылка на Forgot Password */}
                 <div className="mt-4 text-right hover:translate-x-1 transition duration-300">
-                    <Link className={'text-primaryAccent hover:text-error '} to="/forgot-password">Forgot
+                    <Link className={'text-primaryAccent hover:text-error '} to="/reset_password">Forgot
                         password?</Link>
                 </div>
 

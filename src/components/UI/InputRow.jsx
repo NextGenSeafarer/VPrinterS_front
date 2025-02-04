@@ -1,18 +1,18 @@
 import {useFormContext} from "../../services/FormContext/FormProvider.jsx";
 
-const InputRow = ({name, heading, value, type, units, children}) => {
+const InputRow = ({name, heading, value, type, units, children, className}) => {
 
     const {isEditing, onChange} = useFormContext();
     return (
         <>
 
-            <div className="grid grid-cols-2 py-2 border-b border-borderLight p-1 relative">
+            <div className={`grid grid-cols-2 py-2 border-b border-borderLight p-1 relative`}>
                 <span className=" text-primaryText capitalize font-medium p-1">{heading}</span>
                 {children}
                 {isEditing && !children ?
                     (
                         <input
-                            className="p-1 border border-borderLight rounded bg-background text-primaryText"
+                            className={`p-1 border border-borderLight rounded bg-background text-primaryText ${className}`}
                             value={value}
                             name={name}
                             type={type}

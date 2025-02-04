@@ -1,51 +1,45 @@
 const getNameAndLength = (name) => {
 
-    const createObject = (type, maxValueLength) => {
+    const createObject = (maxValueLength) => {
         return {
-            "type": type,
             "maxValueLength": maxValueLength,
         }
     }
 
     switch (name) {
         case "daily_top_up":
-            return createObject('number', 8)
+            return createObject(8)
         case "equipment_type":
-            return createObject('text', 40)
+            return createObject(40)
         case "equipment_type_short":
-            return createObject('text', 16)
+            return createObject(16)
         case "fuel_in_use":
-            return createObject('text', 16)
+            return createObject(16)
         case "manufacturer":
-            return createObject('text', 70)
+            return createObject(70)
         case "name":
-            return createObject('text', 24)
+            return createObject(24)
         case "oil_brand":
-            return createObject('text', 24)
+            return createObject(24)
         case "oil_grade":
-            return createObject('text', 40)
+            return createObject(40)
         case "oil_quantity_in_system":
-            return createObject('number', 8)
+            return createObject(8)
         case "oil_service_time":
-            return createObject('number', 7)
+            return createObject(7)
         case "type_specification":
-            return createObject('text', 200)
+            return createObject(200)
         case "unit_service_time":
-            return createObject('number', 7)
+            return createObject(7)
         case "vps_equipment_id":
-            return createObject('number', 12)
+            return createObject(12)
         default:
-            return createObject('unknown', 30)
+            return createObject(30)
     }
 }
 
-const checkEquipmentInput = (name, inputValue) => {
-    const {type, maxValueLength} = getNameAndLength(name)
+const checkEquipmentInput = (name) => {
+    const {maxValueLength} = getNameAndLength(name)
     return maxValueLength;
-    // if (typeof inputValue !== type) {
-    //     console.log(inputValue)
-    //     return "Incorrect type of " + name + " input"
-    // }
-
 }
 export default checkEquipmentInput;

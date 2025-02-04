@@ -1,9 +1,5 @@
-import {useState} from "react";
-
 
 const StyledCheckbox = ({label, onChange, checked}) => {
-
-
 
     return (
         <label className="flex items-center space-x-3 cursor-pointer select-none">

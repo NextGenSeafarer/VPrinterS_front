@@ -4,8 +4,8 @@ import {Loader} from "../components/UI/Loader/Loader.jsx";
 import {FaQuestionCircle} from "react-icons/fa";
 import CopyableField from "../components/UI/CopyableField.jsx";
 import {AuthContext} from "../services/AuthContext.jsx";
-import {API_PERSONAL_URL} from "../http/APIendpoints.js";
-
+import {API_EMAIL_CONFIRMATION_URL, API_IS_EMAIL_CONFIRMATION_URL, API_PERSONAL_URL} from "../http/APIendpoints.js";
+import { MdEmail } from "react-icons/md";
 
 const PersonalPage = () => {
 
@@ -24,7 +24,8 @@ const PersonalPage = () => {
     const [copyCodeInfoVisible, setCopyCodeInfoVisible] = useState(false);
     const [submitDisabled, setSubmitDisabled] = useState(true);
     const {isNewUser, setIsNewUser} = useContext(AuthContext);
-
+    const [emailConfirmed, setEmailConfirmed] = useState(false);
+    const [disableEmailConfirmedButton, setDisableEmailConfirmedButton] = useState(false);
 
     const getShipDetails = async () => {
         try {
@@ -105,9 +106,39 @@ const PersonalPage = () => {
         }
     }
 
+    const handleEmailConfirmationLinkSend = async () => {
+        setIsLoading(true);
+        try {
+            await $api.post(API_EMAIL_CONFIRMATION_URL)
+            setDisableEmailConfirmedButton(true);
+        } catch (error) {
+            setErrorMessage('Something went wrong ❌');
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const checkIsEmailConfirmed = async () => {
+        const checkConfirmation = localStorage.getItem("email_confirmed")
+        if (checkConfirmation) {
+            setEmailConfirmed(true);
+        } else {
+            try {
+                const isConfirmed = await $api.get(API_IS_EMAIL_CONFIRMATION_URL)
+                if (isConfirmed) {
+                    localStorage.setItem("email_confirmed", "true");
+                }
+                setEmailConfirmed(true);
+            } catch (error) {
+                setEmailConfirmed(false);
+            }
+        }
+
+    }
 
     useEffect(() => {
         getShipDetails()
+        checkIsEmailConfirmed()
     }, [])
 
     useEffect(() => {
@@ -118,11 +149,21 @@ const PersonalPage = () => {
     return (
 
         <div className="max-w-lg mx-auto p-6 bg-surfaceLight rounded-lg shadow-lg space-y-5 w-[750px] relative">
-            <div className={'flex items-center justify-start gap-3 align-middle border-2 p-3 rounded-2xl border-error'}>
-                <button className={'buttonPrimary bg-error max-w-fit'} onClick={()=>alert('Confirming email')}>Confirm email
-                </button>
-                <div className={'text-primaryText text-md'}>{localStorage.getItem('userEmail')}</div>
-            </div>
+            {!emailConfirmed && !disableEmailConfirmedButton &&
+                <div
+                    className={'flex items-center justify-start gap-3 align-middle border-2 p-3 rounded-2xl border-error'}>
+
+                    <button className={'buttonPrimary bg-error max-w-fit'} disabled={disableEmailConfirmedButton}
+                            onClick={handleEmailConfirmationLinkSend}>Confirm
+                        email
+                    </button>
+                    <div className={'text-primaryText text-md'}>{localStorage.getItem('userEmail')}</div>
+                </div>
+            }
+            {disableEmailConfirmedButton && <div className={'text-success text-md flex flex-row items-center gap-2'}>Activation link was sent to your email! (Check SPAM folder)
+                <MdEmail />
+            </div>}
+
             {isLoading && <Loader className={'absolute z-50'}></Loader>}
             <h2 className="text-2xl font-bold text-primaryText mb-4">Vessel information</h2>
             <span className={'text-info font-bold'}>Data below will be proceeding for labels generation, fill up exactly as you wish to see on the label</span>
