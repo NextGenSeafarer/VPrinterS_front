@@ -2,7 +2,6 @@ import axios from "axios";
 import {API_BASE_URL, API_REFRESH_TOKEN_URL} from "./APIendpoints.js";
 
 
-
 const $api = axios.create({
     withCredentials: true,
     baseURL: API_BASE_URL,
@@ -34,11 +33,17 @@ const processQueue = (error, token = null) => {
     failedQueue = [];
 };
 
-// let authContext = null;
-//
-// export const setAuthContext = (context) => {
-//     authContext = context;
-// };
+
+let markAsUnauthenticated = () => {};
+let markAsAuthenticated = () => {};
+let logout = () => {};
+
+export const setAuthContext = (context) => {
+    markAsUnauthenticated = context.markAsUnauthenticated;
+    markAsAuthenticated = context.markAsAuthenticated;
+    logout = context.logout;
+};
+
 
 $api.interceptors.response.use(
     (response) => response,
@@ -53,15 +58,15 @@ $api.interceptors.response.use(
                     localStorage.setItem('accessToken', data.access_token);
                     const {accessToken} = data;
                     $api.defaults.headers.Authorization = `Bearer ${accessToken}`;
-                    // markAsAuthenticated();
-                    //TODO: deal with interseptors while refreshing access token to change to  unauthorized
+                    markAsAuthenticated();
                     processQueue(null, accessToken);
                     isRefreshing = false;
                     return $api(originalRequest);
                 } catch (refreshError) {
                     processQueue(refreshError, null);
                     isRefreshing = false;
-                    // markAsUnauthenticated();
+                    markAsUnauthenticated();
+                    logout();
                     return Promise.reject(refreshError);
                 }
             }

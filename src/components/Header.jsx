@@ -36,7 +36,7 @@ export const Header = () => {
                     </Link>
                 </> : <>
 
-                    <button onMouseEnter={() => setDropDownOpen(true)} onMouseLeave={() => setDropDownOpen(false)}
+                    <div onMouseEnter={() => setDropDownOpen(true)} onMouseLeave={() => setDropDownOpen(false)}
                             className=" flex flex-col items-center mr-6">
                         <div className="flex items-center space-x-2">
                             {isNewUser ?
@@ -50,7 +50,7 @@ export const Header = () => {
                                 {dropDownOpen && <PersonalDropDown></PersonalDropDown>}</span>
 
                         </div>
-                    </button>
+                    </div>
 
                 </>
                 }

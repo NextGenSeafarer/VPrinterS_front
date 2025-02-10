@@ -7,16 +7,18 @@ import {AuthContext} from "../services/AuthContext.jsx";
 import {API_EMAIL_CONFIRMATION_URL, API_IS_EMAIL_CONFIRMATION_URL, API_PERSONAL_URL} from "../http/APIendpoints.js";
 import { MdEmail } from "react-icons/md";
 
+const fields = [
+    {name: 'ship_name', type: 'text', label: 'Vessel Name', length: 45, placeholder: 'LNG/C Methane Pioneer'},
+    {name: 'imo', type: 'number', label: 'IMO', length: 7, placeholder: '5233573'},
+    {name: 'customer_name', type: 'text', label: 'Customer name', length: 45, placeholder: 'Light blue dragon LTD'},
+    {name: 'type', type: 'text', label: 'Vessel type', length: 35, placeholder: 'LNG/C'},];
+const initialState = {
+    ship_name: '', imo: '', customer_name: '', type: '', copy_code: ''
+}
+
 const PersonalPage = () => {
 
-    const fields = [
-        {name: 'ship_name', type: 'text', label: 'Vessel Name', length: 45, placeholder: 'LNG/C Methane Pioneer'},
-        {name: 'imo', type: 'number', label: 'IMO', length: 7, placeholder: '5233573'},
-        {name: 'customer_name', type: 'text', label: 'Customer name', length: 45, placeholder: 'Light blue dragon LTD'},
-        {name: 'type', type: 'text', label: 'Vessel type', length: 35, placeholder: 'LNG/C'},];
-    const initialState = {
-        ship_name: '', imo: '', customer_name: '', type: '', copy_code: ''
-    }
+
     const [shipDetails, setShipDetails] = useState(initialState);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);

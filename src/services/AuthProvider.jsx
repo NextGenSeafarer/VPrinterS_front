@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import $api from "../http/axiosConfig.js";
+import $api, {setAuthContext} from "../http/axiosConfig.js";
 import {AuthContext} from "./AuthContext.jsx";
 import {API_LOGIN_URL, API_LOGOUT_URL, API_PERSONAL_URL, API_REGISTRATION_URL} from "../http/APIendpoints.js";
 
@@ -19,7 +19,6 @@ export const AuthProvider = ({children}) => {
             if (error.response) {
                 throw new Error(error.response.data.message || "Not correct login/password");
             } else {
-                console.error(error);
                 throw new Error("Server unavailable or something went wrong");
             }
         }
@@ -31,7 +30,7 @@ export const AuthProvider = ({children}) => {
         } catch (error) {
             console.error("Error happened during logout" + error);
         } finally {
-            localStorage.removeItem("accessToken");
+            localStorage.clear();
             window.location.href = "/login";
             setIsAuthenticated(false);
         }
@@ -44,7 +43,6 @@ export const AuthProvider = ({children}) => {
             if (error.response) {
                 throw new Error(error.response.data.message || "Something went wrong");
             } else {
-                console.error(error);
                 throw new Error("Server unavailable or something went wrong");
             }
         }
@@ -85,6 +83,13 @@ export const AuthProvider = ({children}) => {
             }
         }
     }
+
+
+
+    useEffect(() => {
+        setAuthContext({ markAsUnauthenticated, markAsAuthenticated, logout});
+    }, [markAsUnauthenticated, markAsAuthenticated, logout]);
+
 
 
     return (

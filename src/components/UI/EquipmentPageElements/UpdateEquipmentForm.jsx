@@ -1,19 +1,19 @@
 import {IoIosClose} from "react-icons/io";
 import {useEffect, useState} from "react";
-import InputRow from "./UI/InputRow.jsx";
-import CheckboxGroup from "./UI/CheckboxGroup.jsx";
-import {Toggle} from "./UI/Toggle.jsx";
-import checkEquipmentInput from "../services/Validator.js";
-import {FormProvider} from "../services/FormContext/FormProvider.jsx";
+import InputRow from "../InputRow.jsx";
+import CheckboxGroup from "../CheckboxGroup.jsx";
+import {Toggle} from "../Toggle.jsx";
+import checkEquipmentInput from "../../../services/Validator.js";
+import {FormProvider} from "../../../services/FormContext/FormProvider.jsx";
 
 import {MdOutlineExpandMore} from "react-icons/md";
 import {MdOutlineExpandLess} from "react-icons/md";
-import {SaveCancelButtonsBlock} from "./UI/ButtonsBlocks/SaveCancelButtonsBlock.jsx";
-import {EditDeleteButtonsBlock} from "./UI/ButtonsBlocks/EditDeleteButtonsBlock.jsx";
-import {useFetching} from "./Hooks/useFetching.js";
-import EquipmentAPI from "../http/API/EquipmentAPI.js";
-import {Loader} from "./UI/Loader/Loader.jsx";
-import {InfoModal} from "./UI/ButtonsBlocks/InfoModal.jsx";
+import {SaveCancelButtonsBlock} from "../ButtonsBlocks/SaveCancelButtonsBlock.jsx";
+import {EditDeleteButtonsBlock} from "../ButtonsBlocks/EditDeleteButtonsBlock.jsx";
+import {useFetching} from "../../Hooks/useFetching.js";
+import EquipmentAPI from "../../../http/API/EquipmentAPI.js";
+import {Loader} from "../Loader/Loader.jsx";
+import {InfoModal} from "../ButtonsBlocks/InfoModal.jsx";
 
 const mainFields = [
     {name: "name", type: "text", heading: "Equipment name"},

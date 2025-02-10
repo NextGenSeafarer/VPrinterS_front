@@ -12,7 +12,8 @@ export const ButtonWithText = ({firstText, secondText, hidden, onClick}) => {
     return (
         <>
             <button hidden={hidden}
-                    className={`bg-info px-4 py-2 text-highlightText rounded hover:bg-opacity-90 w-32 ${isSelected ? 'bg-opacity-100' : 'bg-opacity-60'}`}
+                    className={`bg-surfaceLight px-4 py-2 text-highlightText rounded hover:bg-opacity-90 border-surfaceDark text-xs border-[1px]
+                            hover:bg-info hover:text-surfaceDark transition duration-200 ease-in-out hover:translate-x-[2px] min-w-[100px]`}
                     onClick={toggleSelection}
             >
                 {isSelected ? firstText : secondText}

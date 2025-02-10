@@ -15,7 +15,7 @@ const DropdownMenu = ({onOpenModal, onDelete}) => {
         >
 
             {/* Dropdown Button */}
-            <button className="bg-primaryAccent bg-opacity-80 text-highlightText px-4 py-2 rounded-xl shadow-md">
+            <button className="bg-primaryAccent bg-opacity-80 text-highlightText px-4 py-1 rounded-xl shadow-md">
                 Options
             </button>
 

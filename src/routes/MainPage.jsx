@@ -1,6 +1,3 @@
-import {AddEquipmentForm} from "../components/AddEquipmentForm.jsx";
-
-
 export const MainPage = () => {
 
     return (

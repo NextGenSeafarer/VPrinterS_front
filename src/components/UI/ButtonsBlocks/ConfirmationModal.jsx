@@ -14,25 +14,19 @@ export const ConfirmationModal = ({head, body, highlightText, onConfrim, isOpen,
                     e.stopPropagation();
                     onClose();
                 }}>
-                <div className="bg-surfaceDark p-8 rounded-lg shadow-lg relative w-[30%] space-y-2">
+                <div className="bg-surfaceDark pt-12 px-10 pb-20 rounded-lg shadow-lg relative w-fit space-y-2">
                     <button className={"absolute top-0 right-0 p-2"}
                             onClick={onClose}>
                         <IoIosClose size={30} color={"#FF9F43"}/>
                     </button>
-                    <h2 className="text-xl font-bold text-highlightText mb-4">{head}</h2>
-                    <div className={"text-md text-primaryText"}>{body}
+                    <h2 className="text-xl font-bold text-highlightText text-start">{head}</h2>
+                    <div className={"text-md text-primaryText text-start"}>{body}
                         <span className={'text-primaryAccent font-semibold'}>{" " + highlightText}</span> ?
                     </div>
-                    <div className={'flex items-center justify-between space-y-4 gap-3'}>
+                    <div className={'absolute right-0 bottom-0 p-4'}>
                         <button onClick={onConfrim}
-                                className="p-2 rounded-md bg-error text-white hover:bg-red-600 transition flex items-center"
-                        >
+                                className="p-2 rounded-md bg-error text-white hover:bg-red-600 transition flex items-center">
                             Confirm
-                        </button>
-                        <button onClick={onClose}
-                                className="p-2 rounded-md bg-info text-white transition flex items-center"
-                        >
-                            Cancel
                         </button>
                     </div>
                 </div>

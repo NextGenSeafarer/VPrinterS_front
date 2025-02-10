@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import DropdownMenu from "./UI/DropDownMenu.jsx";
-import {Toggle} from "./UI/Toggle.jsx";
+import DropdownMenu from "../DropDownMenu.jsx";
+import {Toggle} from "../Toggle.jsx";
 import {UpdateEquipmentForm} from "./UpdateEquipmentForm.jsx";
-import {ConfirmationModal} from "./UI/ButtonsBlocks/ConfirmationModal.jsx";
+import {ConfirmationModal} from "../ButtonsBlocks/ConfirmationModal.jsx";
+import checkEquipmentInput from "../../../services/Validator.js";
 
 export const Equipment = ({equipmentData, onEquipmentEdit, onDelete, index}) => {
 
@@ -36,7 +37,7 @@ export const Equipment = ({equipmentData, onEquipmentEdit, onDelete, index}) => 
 
     const handeChange = (e) => {
         const {name, value} = e.target;
-        const limit = maxLengthCheck(name);
+        const limit = checkEquipmentInput(name);
         if (value.length <= limit) {
             setEquipment((prevState) => {
                 const updatedEquipment = {...prevState, [name]: value};
@@ -54,45 +55,17 @@ export const Equipment = ({equipmentData, onEquipmentEdit, onDelete, index}) => 
         });
     };
 
-    const maxLengthCheck = (name) => {
-        const maxLengths = {
-            daily_top_up: 8,
-            equipment_type: 40,
-            equipment_type_short: 16,
-            fuel_in_use: 16,
-            manufacturer: 70,
-            name: 24,
-            oil_brand: 24,
-            oil_grade: 40,
-            oil_quantity_in_system: 8,
-            oil_service_time: 7,
-            type_specification: 200,
-            unit_service_time: 7,
-            vps_equipment_id: 12,
-        };
-        return maxLengths[name] || 30;
-    };
-
-
-
-
     return (
         <>
             <div
                 className={`grid grid-cols-[240px_repeat(6,_1fr)_80px] gap-2 text-secondaryText
                 items-center p-2 border-b border-borderLight hover:bg-surfaceDark text-center relative`}
             >
-                {/* Name (240px) */}
                 <div className="truncate text-primaryText">{equipment.name}</div>
-
-                {/* VPS Equipment ID */}
                 <div
                     className={`truncate ${equipment.vps_equipment_id === 0 ? 'bg-error rounded-2xl animate-pulse' : null}`}>
                     {equipment.vps_equipment_id === 0 ? 'Update VPS ID' : equipment.vps_equipment_id}</div>
-
-                {/* Oil Quantity */}
                 <div className="truncate">{equipment.oil_quantity_in_system}</div>
-
                 {inputFields.map(({name, type, value}) => (
                     <React.Fragment key={name}>
                         <div
@@ -112,13 +85,14 @@ export const Equipment = ({equipmentData, onEquipmentEdit, onDelete, index}) => 
                                            highlightText={equipment.name}
                                            isOpen={deleteConfirmationModal}
                                            onClose={() => setDeleteConfirmationModal(false)}
-                                           onConfrim={onDelete}
+                                           onConfrim={() => onDelete(equipment.id)}
                         >
                         </ConfirmationModal>
                     </React.Fragment>
                 ))}
                 <div className="flex justify-center space-x-2">
-                    <DropdownMenu onOpenModal={()=>setDropDownOpen(true)} onDelete={() => setDeleteConfirmationModal(true)}/>
+                    <DropdownMenu onOpenModal={() => setDropDownOpen(true)}
+                                  onDelete={() => setDeleteConfirmationModal(true)}/>
                 </div>
                 <div>
                     <Toggle onToggle={handleToggleChange} isActive={equipment.active}/>
@@ -127,7 +101,7 @@ export const Equipment = ({equipmentData, onEquipmentEdit, onDelete, index}) => 
                     onChange={onEquipmentEdit}
                     equipmentData={equipment}
                     isEditFormOpen={dropDownOpen}
-                    onModalClose={()=>setDropDownOpen(false)}
+                    onModalClose={() => setDropDownOpen(false)}
                 ></UpdateEquipmentForm>
             </div>
         </>

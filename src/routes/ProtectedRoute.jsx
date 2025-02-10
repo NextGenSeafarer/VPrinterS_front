@@ -6,7 +6,7 @@ export const ProtectedRoute = () => {
     const {isAuthenticated} = useContext(AuthContext);
 
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return <Outlet />;

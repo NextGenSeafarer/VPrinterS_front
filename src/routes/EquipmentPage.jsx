@@ -1,21 +1,26 @@
 import {useEffect, useState} from "react";
-import EquipmentTable from "../components/EquipmentTable.jsx";
+import EquipmentTable from "../components/UI/EquipmentPageElements/EquipmentTable.jsx";
 import {Loader} from "../components/UI/Loader/Loader.jsx";
-import {AddEquipmentForm} from "../components/AddEquipmentForm.jsx";
+import {AddEquipmentForm} from "../components/UI/EquipmentPageElements/AddEquipmentForm.jsx";
 import {useFetching} from "../components/Hooks/useFetching.js";
 import EquipmentAPI from "../http/API/EquipmentAPI.js";
+import {InfoModal} from "../components/UI/ButtonsBlocks/InfoModal.jsx";
+import {GlobalErrorHandler} from "../services/Errors/GlobalErrorHandler.jsx";
+
 
 
 export const EquipmentPage = () => {
     const [equipmentData, setEquipmentData] = useState([]);
-
+    const [fullEquipmentList, setFullEquipmentList] = useState([]);
     const [showNewEquipmentForm, setShowNewEquipmentForm] = useState(false);
-    const [fetchEquipmentData, loading, loadingError] = useFetching(async () => {
-        const data = await EquipmentAPI.getAllEquipment();
-        if (data) {
-            setEquipmentData(data);
-        }
 
+    const [fetchEquipmentData, fetchEquipmentLoading] = useFetching(async () => {
+        const data = await EquipmentAPI.getAllEquipment();
+        setEquipmentData(data);
+        setFullEquipmentList(data);
+    });
+    const [copyEquipment, copyEquipmentLoading] = useFetching(async (copyCode) => {
+        await EquipmentAPI.copyEquipment(copyCode);
     });
 
     const handleEquipmentEdit = (updatedEquipment) => {
@@ -57,6 +62,9 @@ export const EquipmentPage = () => {
             setEquipmentData((prevEquipmentData) =>
                 prevEquipmentData.filter(x => x.id !== id)
             );
+            setFullEquipmentList((prevEquipmentData) =>
+                prevEquipmentData.filter(x => x.id !== id)
+            );
         }
     }
 
@@ -74,20 +82,46 @@ export const EquipmentPage = () => {
             default:
                 setEquipmentData([...equipmentData].sort((a, b) => a[sort].localeCompare(b[sort])));
         }
+    }
 
+    const handleSearch = (search) => {
+        const cleanSearch = search.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
+        if (cleanSearch.trim() !== '') {
+            const filteredEquipments = [...fullEquipmentList].filter(equipment =>
+                equipment.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, "").includes(cleanSearch));
+            let vpsIdSearch = [];
+            if (cleanSearch.replace(/\D/g, "") !== "") {
+                vpsIdSearch = [...fullEquipmentList].filter(equipment =>
+                    String(equipment.vps_equipment_id || "").replace(/\D/g, "").includes(cleanSearch.replace(/\D/g, ""))
+                );
+            }
+            const sortedResults = [...new Set([...filteredEquipments, ...vpsIdSearch])];
+            if (sortedResults.length > 0) {
+                setEquipmentData(sortedResults);
+            }
+        } else {
+            setEquipmentData(fullEquipmentList);
+        }
+    }
+
+    const handleSecretCode = async (secretCode) => {
+        if (secretCode === '') {
+            return
+        }
+        await copyEquipment(secretCode);
+        await fetchEquipmentData();
     }
 
     useEffect(() => {
-        fetchEquipmentData()
+        fetchEquipmentData();
     }, [])
 
 
-    if (loading) {
-        return <Loader/>
-    }
 
     return (
         <>
+            <GlobalErrorHandler></GlobalErrorHandler>
+            {(fetchEquipmentLoading || copyEquipmentLoading) && <Loader/>}
             <EquipmentTable
                 equipmentData={equipmentData}
                 onEquipmentEdit={handleEquipmentEdit}
@@ -96,6 +130,8 @@ export const EquipmentPage = () => {
                 onDateChange={handleDateChange}
                 onDeselect={handleDeselectSelectToggle}
                 onSort={handleSortingEquipment}
+                onSearch={handleSearch}
+                handleSecretCode={handleSecretCode}
             />
 
             <AddEquipmentForm showAddEquipmentForm={showNewEquipmentForm}
@@ -104,8 +140,6 @@ export const EquipmentPage = () => {
                                   addNewElementToTable();
                                   fetchEquipmentData();
                               }}></AddEquipmentForm>
-
-
         </>
     )
 }

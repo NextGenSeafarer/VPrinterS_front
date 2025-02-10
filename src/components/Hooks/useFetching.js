@@ -1,21 +1,21 @@
-import {useState} from "react";
+import { useState, useContext } from "react";
+import {ErrorContext} from "../../services/Errors/ErrorContext.jsx";
+
 
 export const useFetching = (callback) => {
-
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+    const { showError } = useContext(ErrorContext);
 
-    const fetching = async () => {
-        setError('')
+    const fetching = async (...args) => {
         try {
             setIsLoading(true);
-            await callback();
-        } catch (error) {
-            setError(error.response?.data?.message || error.message);
+            await callback(...args);
+        } catch (err) {
+            showError(err.response?.data?.message || err.message);
         } finally {
             setIsLoading(false);
         }
-    }
-    return [fetching, isLoading, error];
+    };
 
-}
+    return [fetching, isLoading];
+};
