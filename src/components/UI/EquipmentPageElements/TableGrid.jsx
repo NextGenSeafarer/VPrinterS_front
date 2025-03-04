@@ -11,17 +11,18 @@ const columns = [
 ]
 
 
-export const TableGrid = () => {
+export const TableGrid = ({children, className}) => {
     return (
         <>
             <div
-                className={`grid grid-cols-[240px_repeat(6,_1fr)_80px] gap-2 text-primaryText mb-2 border-b border-borderLight pb-2 text-center`}>
+                className={`grid grid-cols-7 gap-2 text-primaryText mb-2 border-b border-borderLight pb-2 text-center p-1 ${className}`}>
                 {columns.map((column, index) => (
                     <div key={column.name + index} className="font-semibold">
                         {column.name}
-                        <div className="text-secondaryAccent">{column.units}</div>
+                        <div className="text-secondaryAccent text-xs">{column.units}</div>
                     </div>
                 ))}
+                {children}
             </div>
         </>
     )

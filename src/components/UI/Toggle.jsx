@@ -4,7 +4,7 @@ export const Toggle = ({onToggle, isActive}) => {
         <>
             <div
                 onClick={onToggle}
-                className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer transition duration-300 ${
+                className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer scale-90 transition duration-300 ${
                     isActive ? 'bg-primaryAccent' : 'bg-surfaceDark'
                 }`}
             >

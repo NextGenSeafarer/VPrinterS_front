@@ -9,12 +9,13 @@ export const ConfirmationModal = ({head, body, highlightText, onConfrim, isOpen,
     return (
         <>
             <div
-                className="fixed inset-0 bg-surfaceLight bg-opacity-50 flex items-center justify-center z-50 space-y-0"
+                className="fixed inset-0 bg-surfaceLight bg-opacity-50 flex items-center justify-center z-50 space-y-0 text-xs"
                 onClick={(e) => {
                     e.stopPropagation();
                     onClose();
                 }}>
-                <div className="bg-surfaceDark pt-12 px-10 pb-20 rounded-lg shadow-lg relative w-fit space-y-2">
+                <div className="bg-surfaceDark pt-12 px-10 pb-20 rounded-lg shadow-lg relative w-fit space-y-2"
+                     onClick={(e) => e.stopPropagation()}>
                     <button className={"absolute top-0 right-0 p-2"}
                             onClick={onClose}>
                         <IoIosClose size={30} color={"#FF9F43"}/>

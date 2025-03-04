@@ -4,14 +4,14 @@ import {Loader} from "../components/UI/Loader/Loader.jsx";
 import {AddEquipmentForm} from "../components/UI/EquipmentPageElements/AddEquipmentForm.jsx";
 import {useFetching} from "../components/Hooks/useFetching.js";
 import EquipmentAPI from "../http/API/EquipmentAPI.js";
-import {InfoModal} from "../components/UI/ButtonsBlocks/InfoModal.jsx";
 import {GlobalErrorHandler} from "../services/Errors/GlobalErrorHandler.jsx";
-
 
 
 export const EquipmentPage = () => {
     const [equipmentData, setEquipmentData] = useState([]);
+
     const [fullEquipmentList, setFullEquipmentList] = useState([]);
+
     const [showNewEquipmentForm, setShowNewEquipmentForm] = useState(false);
 
     const [fetchEquipmentData, fetchEquipmentLoading] = useFetching(async () => {
@@ -19,6 +19,7 @@ export const EquipmentPage = () => {
         setEquipmentData(data);
         setFullEquipmentList(data);
     });
+
     const [copyEquipment, copyEquipmentLoading] = useFetching(async (copyCode) => {
         await EquipmentAPI.copyEquipment(copyCode);
     });
@@ -29,44 +30,44 @@ export const EquipmentPage = () => {
                 equipment.id === updatedEquipment.id ? {...updatedEquipment} : {...equipment}
             )
         );
+        setFullEquipmentList((prevEquipmentData) =>
+            prevEquipmentData.map((equipment) =>
+                equipment.id === updatedEquipment.id ? {...updatedEquipment} : {...equipment}
+            )
+        );
     };
 
     const handleDateChange = (activeEquipmentList, mainDate) => {
-        setEquipmentData((prevData) =>
-            prevData.map((equipment) =>
-                equipment.active ? {...equipment, sampling_date: mainDate} : equipment
-            )
-        );
+        if(mainDate) {
+            setEquipmentData((prevData) =>
+                prevData.map((equipment) =>
+                    equipment.active ? {...equipment, sampling_date: mainDate} : equipment
+                )
+            );
+        }
+
     }
+
     const handleDeselectSelectToggle = () => {
         setEquipmentData((prevEquipmentData) =>
             prevEquipmentData.map((equipment) =>
                 equipment.active ? {...equipment, active: false} : {...equipment, active: true}));
+        setFullEquipmentList((prevEquipmentData) =>
+            prevEquipmentData.map((equipment) =>
+                equipment.active ? {...equipment, active: false} : {...equipment, active: true}));
     }
 
-
-    const handleShowNewEquipment = () => {
-        setShowNewEquipmentForm(true);
-    }
-
-    const handleHideNewEquipment = () => {
-        setShowNewEquipmentForm(false);
-    }
-
-    const addNewElementToTable = (newEquipment) => {
-        setEquipmentData((prevEquipmentData) => [...prevEquipmentData, {...newEquipment}]);
-    };
     const handleDeleteEquipment = async (id) => {
         const res = await EquipmentAPI.deleteEquipment(id);
         if (res.status === 200) {
-            setEquipmentData((prevEquipmentData) =>
-                prevEquipmentData.filter(x => x.id !== id)
-            );
-            setFullEquipmentList((prevEquipmentData) =>
-                prevEquipmentData.filter(x => x.id !== id)
-            );
+            const updatedFullList = fullEquipmentList.filter(x => x.id !== id);
+            setFullEquipmentList(updatedFullList);
+            setEquipmentData((prevEquipmentData) => {
+                const updatedFilteredList = prevEquipmentData.filter(x => x.id !== id);
+                return updatedFilteredList.length > 0 ? updatedFilteredList : updatedFullList;
+            });
         }
-    }
+    };
 
     const handleSortingEquipment = (sort) => {
         switch (sort) {
@@ -86,23 +87,23 @@ export const EquipmentPage = () => {
 
     const handleSearch = (search) => {
         const cleanSearch = search.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
-        if (cleanSearch.trim() !== '') {
-            const filteredEquipments = [...fullEquipmentList].filter(equipment =>
-                equipment.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, "").includes(cleanSearch));
+        if (cleanSearch.trim() !== "") {
+            const filteredEquipments = fullEquipmentList.filter(equipment =>
+                equipment.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, "").includes(cleanSearch)
+            );
+
             let vpsIdSearch = [];
             if (cleanSearch.replace(/\D/g, "") !== "") {
-                vpsIdSearch = [...fullEquipmentList].filter(equipment =>
+                vpsIdSearch = fullEquipmentList.filter(equipment =>
                     String(equipment.vps_equipment_id || "").replace(/\D/g, "").includes(cleanSearch.replace(/\D/g, ""))
                 );
             }
             const sortedResults = [...new Set([...filteredEquipments, ...vpsIdSearch])];
-            if (sortedResults.length > 0) {
-                setEquipmentData(sortedResults);
-            }
+            setEquipmentData(sortedResults.length > 0 ? sortedResults : fullEquipmentList);
         } else {
             setEquipmentData(fullEquipmentList);
         }
-    }
+    };
 
     const handleSecretCode = async (secretCode) => {
         if (secretCode === '') {
@@ -116,8 +117,6 @@ export const EquipmentPage = () => {
         fetchEquipmentData();
     }, [])
 
-
-
     return (
         <>
             <GlobalErrorHandler></GlobalErrorHandler>
@@ -125,7 +124,7 @@ export const EquipmentPage = () => {
             <EquipmentTable
                 equipmentData={equipmentData}
                 onEquipmentEdit={handleEquipmentEdit}
-                onShowNewEquipment={handleShowNewEquipment}
+                onShowNewEquipment={() => setShowNewEquipmentForm(true)}
                 onDelete={handleDeleteEquipment}
                 onDateChange={handleDateChange}
                 onDeselect={handleDeselectSelectToggle}
@@ -133,13 +132,10 @@ export const EquipmentPage = () => {
                 onSearch={handleSearch}
                 handleSecretCode={handleSecretCode}
             />
-
             <AddEquipmentForm showAddEquipmentForm={showNewEquipmentForm}
-                              onFormClose={handleHideNewEquipment}
-                              onSuccessAdding={() => {
-                                  addNewElementToTable();
-                                  fetchEquipmentData();
-                              }}></AddEquipmentForm>
+                              onFormClose={() => setShowNewEquipmentForm(false)}
+                              onSuccessAdding={fetchEquipmentData}>
+            </AddEquipmentForm>
         </>
     )
 }

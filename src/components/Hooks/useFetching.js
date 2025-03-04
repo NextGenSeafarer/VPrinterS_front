@@ -11,7 +11,20 @@ export const useFetching = (callback) => {
             setIsLoading(true);
             await callback(...args);
         } catch (err) {
-            showError(err.response?.data?.message || err.message);
+            if (err.response?.data instanceof Blob) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    try {
+                        const errorData = JSON.parse(reader.result);
+                        showError(errorData?.message || 'Unknown error occurred');
+                    } catch {
+                        showError('Server error');
+                    }
+                };
+                reader.readAsText(err.response.data);
+            } else {
+                showError(err.response?.data?.message || err.response?.data || err.message);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -19,3 +32,4 @@ export const useFetching = (callback) => {
 
     return [fetching, isLoading];
 };
+

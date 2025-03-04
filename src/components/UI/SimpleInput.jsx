@@ -1,19 +1,24 @@
+import {useState} from "react";
+
 export const SimpleInput = ({name, type, heading, units, value, children, onChange, className}) => {
+
+    const [showUnits, setShowUnits] = useState(true);
+
     return (
         <>
-            <div className="grid grid-cols-2 py-2 border-b border-borderLight relative">
-                <span className=" text-primaryText capitalize font-medium p-1">{heading}</span>
+            <div className="grid grid-cols-2 relative py-1 items-center">
+                <span className="p-1 text-primaryText capitalize font-medium">{heading}</span>
                 {children ? children : <input
-                    className={`p-0.5 mb-2 border border-borderLight rounded bg-background text-primaryText ${className}`}
+                    className={`border border-borderLight rounded bg-background text-primaryText ${className}`}
                     name={name}
                     type={type}
                     value={value}
                     onChange={onChange}
+                    onFocus={() => setShowUnits(false)}
+                    onBlur={() => setShowUnits(true)}
                 />
                 }
-
-                <span className={'absolute bottom-0 right-0 text-primaryAccent text-xs text-opacity-70'}>{units}</span>
-
+                <span className={`absolute right-2 text-primaryAccent text-[10px] text-opacity-70 ${!showUnits? 'animate-fade-away' : ''}`}>{units}</span>
             </div>
 
         </>

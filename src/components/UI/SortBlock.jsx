@@ -4,7 +4,7 @@ export const SortBlock = ({hidden, options, onChange, value, defaulValue}) => {
             <select hidden={hidden}
                     onChange={event => {onChange(event.target.value)}}
                     value={value}
-                    className="bg-surfaceLight px-4 py-2 text-highlightText rounded hover:bg-opacity-80">
+                    className="bg-surfaceLight px-2 py-2 w-fit text-highlightText rounded hover:bg-opacity-80">
 
                 <option disabled value={''}>{defaulValue}</option>
                 {options.map((option) => (

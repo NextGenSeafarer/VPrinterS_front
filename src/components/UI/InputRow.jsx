@@ -6,13 +6,13 @@ const InputRow = ({name, heading, value, type, units, children, className}) => {
     return (
         <>
 
-            <div className={`grid grid-cols-2 py-2 border-b border-borderLight p-1 relative`}>
-                <span className=" text-primaryText capitalize font-medium p-1">{heading}</span>
+            <div className={`grid grid-cols-2 border-b border-borderLight relative py-1 items-center`}>
+                <span className="p-1 text-highlightText capitalize font-medium">{heading}</span>
                 {children}
                 {isEditing && !children ?
                     (
                         <input
-                            className={`p-1 border border-borderLight rounded bg-background text-primaryText ${className}`}
+                            className={`border border-borderLight rounded bg-background text-primaryText ${className} ${(value === '0' || value === '') ? 'border-error border-2 animate-pulse' : null}`}
                             value={value}
                             name={name}
                             type={type}
@@ -23,10 +23,7 @@ const InputRow = ({name, heading, value, type, units, children, className}) => {
                         <span className="text-secondaryText p-1">{value}</span>
                     )
                 }
-                {
-                    isEditing ? '' : <span
-                        className={'absolute bottom-0 right-0 text-primaryAccent text-xs text-opacity-70'}>{units}</span>
-                }
+                <span className={`absolute right-0 bottom-0 text-primaryAccent text-[8px] text-opacity-70 ${isEditing? 'animate-fade-away' : null}`}>{units}</span>
 
             </div>
         </>

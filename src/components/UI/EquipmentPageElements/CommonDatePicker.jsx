@@ -1,26 +1,27 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
-export const CommonDatePicker = ({hidden, handleDateChange}) => {
-    const [mainDate, setMainDate] = useState(new Date().toISOString().split('T')[0]);
+export const CommonDatePicker = ({hidden, handleDateChange, className}) => {
+    const [mainDate, setMainDate] = useState(new Date(Date.now()).toISOString().split("T")[0]);
 
 
     return (
         <>
-            <div className="w-fit absolute top-0 right-0 pr-6 pt-4 flex items-center gap-3 text-xs">
-                <div hidden={hidden} className="text-highlightText font-bold">
-                    Date for all samples
+            <div className={`w-fit absolute top-0 right-0 flex items-center gap-2 text-xs ${className}`}>
+                <div hidden={hidden} className="text-highlightText">
+                    Last sampling date
                 </div>
                 <input
                     value={mainDate}
-                    onChange={(e) => setMainDate(e.target.value)}
+                    onChange={(e) => {
+                        setMainDate(e.target.value)
+                        handleDateChange(e.target.value)
+                    }
+                }
                     hidden={hidden}
-                    type="date"
-                    className="w-fit text-highlightText p-1 rounded bg-surfaceLight"
+                    type={'date'}
+                    className="w-fit text-highlightText p-1 rounded"
                 />
-                <button hidden={hidden}  className="bg-surfaceDark px-4 py-1 text-highlightText rounded hover:bg-opacity-90 border-surfaceDark border-[1px]
-                hover:bg-indigo-400 hover:text-highlightText transition duration-200 ease-in-out hover:translate-x-[2px]"
-                        onClick={() => handleDateChange(mainDate)}>Set date
-                </button>
+
             </div>
         </>
     )

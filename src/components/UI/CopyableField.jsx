@@ -15,7 +15,7 @@ const CopyableField = ({ text }) => {
         <div
             onClick={handleCopy}
             className={`flex items-center justify-between w-full p-2 border transition duration-500 rounded-md cursor-pointer
-            ${copied ? 'bg-green-300' : 'bg-primaryText'}`}>
+            ${copied ? 'bg-green-400' : 'bg-primaryText'}`}>
             <span className="text-surfaceDark">{text}</span>
             <button
                 className="p-1 text-surfaceDark transition-transform duration-400 relative"

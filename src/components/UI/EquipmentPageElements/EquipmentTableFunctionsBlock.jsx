@@ -54,7 +54,7 @@ export const EquipmentTableFunctionsBlock = ({
                     <button
                         className={'bg-surfaceDark px-4 py-2 text-highlightText rounded hover:bg-opacity-90 border-surfaceDark border-[1px]\n' +
                             'hover:bg-indigo-400 hover:text-highlightText transition duration-200 ease-in-out hover:translate-x-[2px]'}
-                        onClick={() => handleSecretCode(secretCode)}>Check code
+                        onClick={() => {handleSecretCode(secretCode);setSecretCode('');}}>Check code
                     </button>
                     <input className={'border-primaryAccent min-w-[280px]'}
                            placeholder={'Enter secret code here'}

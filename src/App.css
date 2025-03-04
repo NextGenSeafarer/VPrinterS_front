@@ -32,17 +32,21 @@ input[type=number] {
 }
 
 input[type="date"] {
+    appearance: none; /* Отключает браузерный стиль */
+    -webkit-appearance: none;
+    -moz-appearance: none;
     color-scheme: dark; /* Или light, в зависимости от темы */
+    height: 26px;
 }
 
 
 
-/* Основные стили для input */
+    /* Основные стили для input */
 input {
     background-color: #1A3B4A; /* Цвет поверхности */
     color: #D1E8E2; /* Основной цвет текста */
     border: 1px solid #3B5360; /* Светлый оттенок для границ */
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.5rem;
     border-radius: 4px;
     outline: none;
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
@@ -68,7 +72,6 @@ input:disabled {
     border-color: #3B5360; /* Сохранение нейтральной границы */
     cursor: not-allowed;
 }
-
 
 
 .message {
@@ -126,7 +129,29 @@ input:disabled {
     }
 }
 
-.buttonPrimary{
+.buttonPrimary {
     @apply w-full p-2 text-highlightText rounded font-semibold transition duration-300
     cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400 hover:bg-opacity-80
 }
+
+.animate-fade-away {
+    animation: fade-away 0.2s cubic-bezier(0.71, 0.09, 0.33, 1.04);
+    opacity: 0;
+
+}
+
+@keyframes fade-away {
+    0% {
+        opacity: 100;
+    }
+    100% {
+        opacity: 0;
+    }
+
+}
+input[type="date"]::-webkit-clear-button {
+    display: none;
+    pointer-events: none;
+}
+
+

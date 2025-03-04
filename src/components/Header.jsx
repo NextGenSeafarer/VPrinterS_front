@@ -11,25 +11,24 @@ export const Header = () => {
     const userEmail = localStorage.getItem("userEmail");
     const [dropDownOpen, setDropDownOpen] = useState(false);
 
-
     return (<>
         <header
-            className="bg-background bg-opacity-35 text-highlightText shadow-md rounded-xl h-24 m-3 relative flex
-            align-middle justify-between items-center p-7">
+            className="bg-background text-highlightText shadow-md rounded-xl h-24 m-3 relative flex
+            align-middle items-center p-7 justify-between">
 
             <Link to={'/'}>
-                <img className={'w-[60px] h-[60px]'} src='src/static/logoBig.png' alt={'logo'}></img>
+                <img className={'w-[60px] h-[60px] items-start'} src='src/static/logoBig.png' alt={'logo'}></img>
             </Link>
 
             <nav className="space-x-6">
                 <Link to={'/'}>Home</Link>
                 <Link hidden={!isAuthenticated} to={'/equipment'}>Equipment</Link>
+                <Link hidden={!isAuthenticated} to={'/groups'}>Groups</Link>
                 <Link hidden={!isAuthenticated} to={'/generated_pdfs'}>Generated PDFs</Link>
-
             </nav>
 
 
-            <div className="space-x-6 flex flex-row items-center">
+            <div className="space-x-6 flex flex-row">
                 {!isAuthenticated ? <>
                     <Link to={"/login"}>
                         <button className="hover:text-accentCopper">Login</button>

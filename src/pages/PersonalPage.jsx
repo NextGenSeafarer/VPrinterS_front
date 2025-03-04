@@ -150,7 +150,7 @@ const PersonalPage = () => {
 
     return (
 
-        <div className="max-w-lg mx-auto p-6 bg-surfaceLight rounded-lg shadow-lg space-y-5 w-[750px] relative">
+        <div className="max-w-lg mx-auto p-6 bg-surfaceLight rounded-lg shadow-lg space-y-5 w-[750px] relative text-xs">
             {!emailConfirmed && !disableEmailConfirmedButton &&
                 <div
                     className={'flex items-center justify-start gap-3 align-middle border-2 p-3 rounded-2xl border-error'}>
@@ -199,9 +199,8 @@ const PersonalPage = () => {
                     </FaQuestionCircle>
                     {copyCodeInfoVisible && <div
                         className={'absolute bottom-[40px] -right-[120px] bg-primaryAccent z-50 w-36 p-3 text-xs rounded shadow-2xl'}>
-                        This is YOUR personal SECRET CODE. By applying some one else SECRET CODE at page EQUIPMENT -
-                        you will copy all equipment from vessel you got the code. It will make initial filling of data
-                        easy for you
+                        This is your personal secret code. By entering someone else's secret code on the Equipment page,
+                        you will copy all equipment from the vessel associated with that code. This makes the initial data entry process easier for you.
                     </div>}
                 </div>
             }
